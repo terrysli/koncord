@@ -1,10 +1,8 @@
 import spacy
 
-nlp = spacy.blank("en")
-ruler = nlp.add_pipe("span_ruler")
-patterns = [{"label": "ORG", "pattern": "Apple"},
-            {"label": "GPE", "pattern": [{"LOWER": "san"}, {"LOWER": "francisco"}]}]
-ruler.add_patterns(patterns)
+from preambles import preambles
 
-doc = nlp("Apple is opening its first big office in San Francisco.")
-print([(span.text, span.label_) for span in doc.spans["ruler"]])
+nlp = spacy.load("en_core_web_sm")
+doc = nlp(preambles[0])
+
+print("ents:", [(ent.text, ent.label_) for ent in doc.ents])
