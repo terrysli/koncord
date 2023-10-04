@@ -5,5 +5,5 @@ preambles=[
     company (“Buyer”), and CANADIAN SOLAR (USA) INC., a Delaware corporation
     (“Seller”).  Buyer and Seller are referred to herein individually as a “Party”,
     and collectively as the “Parties”. Goods will be shipped DDP.
-    """
+    """,
 ]
