@@ -3,6 +3,6 @@ import spacy
 from preambles import preambles
 
 nlp = spacy.load("en_core_web_sm")
-doc = nlp(preambles[0])
+doc = nlp('This is a "test to separate" tokens from their quotes.')
 
-print("ents:", [(ent.text, ent.label_) for ent in doc.ents])
+print ([(token.i, token.text) for token in doc])
