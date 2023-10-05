@@ -63,15 +63,26 @@ BIZ_TYPES = [
 
 INCOTERMS = [
     "EXW",
+    "E.X.W."
     "Ex Works",
     "FCA",
+    "F.C.A."
     "CPT",
+    "C.P.T."
     "CIP",
+    "C.I.P."
     "DAP",
+    "D.A.P."
     "DPU",
+    "D.P.U."
     "DDP",
+    "D.D.P."
     "FAS",
+    "F.A.S."
     "FOB",
+    "F.O.B."
     "CFR",
+    "C.F.R."
     "CIF",
+    "C.I.F.",
 ]
