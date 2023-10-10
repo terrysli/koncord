@@ -5,7 +5,7 @@ from spacy.matcher import Matcher, PhraseMatcher
 import re
 
 from categories import STATES, BIZ_TYPES, INCOTERMS
-from preambles import preambles
+from data.preambles import preambles
 
 
 nlp = spacy.load("en_core_web_sm")
@@ -14,14 +14,15 @@ nlp = spacy.load("en_core_web_sm")
 
 entity_ruler = nlp.add_pipe("entity_ruler", before="ner")
 
-# Add more patterns for other ents here
+# Patterns for names of US states
 state_patterns = [{"label": "JDX",
                  "pattern": [
                      {"LOWER": "state", "OP": "?"},
                      {"LOWER": "of", "OP": "?"},
-                     {"TEXT": {"IN": STATES}}
+                     {"LOWER": {"IN": STATES}}
                  ]
                  }]
+# TODO: Add other jurisdiction patterns (e.g., venues)
 entity_patterns = state_patterns
 entity_ruler.add_patterns(entity_patterns)
 
