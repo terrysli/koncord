@@ -10,7 +10,7 @@ from data.preambles import preambles
 
 nlp = spacy.load("en_core_web_sm")
 
-########## Labelling entities ##########
+########## EntityRuler ##########
 
 entity_ruler = nlp.add_pipe("entity_ruler", before="ner")
 
@@ -27,7 +27,7 @@ entity_patterns = state_patterns
 entity_ruler.add_patterns(entity_patterns)
 
 
-########## Labelling spans ##########
+########## SpanRuler ##########
 
 ruler = nlp.add_pipe("span_ruler", before="ner")
 
@@ -50,6 +50,9 @@ doc = nlp(preambles[0])
 print("Entities:", [(ent.text, ent.label_) for ent in doc.ents])
 print("Spans:", [(span.text, span.label_) for span in doc.spans["ruler"]])
 
+
+########## Labelling defined terms ##########
+
 Doc.set_extension("defined_terms", default=[])
 
 expression = r'“([^“”]+)”'
@@ -60,3 +63,15 @@ for match in re.finditer(expression, doc.text):
     doc._.defined_terms.append(doc.char_span(start+1, end-1, label="DEFTERM"))
 
 print("defined terms:", doc._.defined_terms)
+
+# Label all instances of defined terms that match the list stored in
+# doc._.defined_terms
+def_term_matcher = PhraseMatcher(nlp.vocab)
+def_term_patterns = [nlp.make_doc(term.text) for term in doc._.defined_terms]
+def_term_matcher.add("DefinedTerms", def_term_patterns)
+
+matches = def_term_matcher(doc)
+for match_id, start, end in matches:
+    span = doc[start:end]
+    span.label_ = "DEFTERM"
+    print("defined term found:", span.text, span.label_)
