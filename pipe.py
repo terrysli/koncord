@@ -16,12 +16,12 @@ entity_ruler = nlp.add_pipe("entity_ruler", before="ner")
 
 # Patterns for names of US states
 state_patterns = [{"label": "JDX",
-                 "pattern": [
-                     {"LOWER": "state", "OP": "?"},
-                     {"LOWER": "of", "OP": "?"},
-                     {"LOWER": {"IN": STATES}}
-                 ]
-                 }]
+                   "pattern": [
+                       {"LOWER": "state", "OP": "?"},
+                       {"LOWER": "of", "OP": "?"},
+                       {"LOWER": {"IN": STATES}}
+                   ]
+                   }]
 # TODO: Add other jurisdiction patterns (e.g., venues)
 entity_patterns = state_patterns
 entity_ruler.add_patterns(entity_patterns)
@@ -39,14 +39,22 @@ incoterm_patterns = [
     {"label": "INCOTERM", "pattern": term} for term in INCOTERMS
 ]
 
+money_pattern = [
+    {"label": "MONEY",
+     "pattern": [{"IS_CURRENCY": True},
+                 {"TEXT": {"REGEX": r"\d{1,3}(,\d{3})*(\.\d{2})?"}}]
+     }
+]
+
 span_patterns = [
     *biz_type_patterns,
     *incoterm_patterns,
+    *money_pattern
 ]
 ruler.add_patterns(span_patterns)
 
 raw_text = preambles[0]
-text = ' '.join(raw_text.split()) # normalizes whitespace
+text = ' '.join(raw_text.split())  # normalizes whitespace
 doc = nlp(text)
 
 print("Entities:", [(ent.text, ent.label_) for ent in doc.ents])
@@ -66,14 +74,14 @@ for match in re.finditer(expression, doc.text):
 
 print("defined terms:", doc._.defined_terms)
 
-# Label all instances of defined terms that match the list stored in extension
-# attribute doc._.defined_terms
+# Matches all strings in defined terms attribute
 def_term_matcher = PhraseMatcher(nlp.vocab)
 def_term_patterns = [nlp.make_doc(term.text) for term in doc._.defined_terms]
 def_term_matcher.add("DefinedTerms", def_term_patterns)
 
+# Labels all spans matching defined terms as "DEFTERM"
 matches = def_term_matcher(doc)
 for match_id, start, end in matches:
     span = doc[start:end]
     span.label_ = "DEFTERM"
-    #print("defined term found:", span.text, span.label_)
+    # print("defined term found:", span.text, span.label_)

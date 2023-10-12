@@ -4,7 +4,7 @@ preambles=[
     liability company (“Buyer”), and CANADIAN SOLAR (USA) INC., a
     Delaware corporation (“Seller”).  Buyer and Seller are referred to herein
     individually as a “Party”, and collectively as the “Parties”. This Agreement
-    shall be blah.
+    shall be for $1,234 of value.
     """,
 
     """
