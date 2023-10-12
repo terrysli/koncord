@@ -45,8 +45,10 @@ span_patterns = [
 ]
 ruler.add_patterns(span_patterns)
 
+raw_text = preambles[0]
+text = ' '.join(raw_text.split()) # normalizes whitespace
+doc = nlp(text)
 
-doc = nlp(preambles[0])
 print("Entities:", [(ent.text, ent.label_) for ent in doc.ents])
 print("Spans:", [(span.text, span.label_) for span in doc.spans["ruler"]])
 
@@ -64,8 +66,8 @@ for match in re.finditer(expression, doc.text):
 
 print("defined terms:", doc._.defined_terms)
 
-# Label all instances of defined terms that match the list stored in
-# doc._.defined_terms
+# Label all instances of defined terms that match the list stored in extension
+# attribute doc._.defined_terms
 def_term_matcher = PhraseMatcher(nlp.vocab)
 def_term_patterns = [nlp.make_doc(term.text) for term in doc._.defined_terms]
 def_term_matcher.add("DefinedTerms", def_term_patterns)
@@ -74,4 +76,4 @@ matches = def_term_matcher(doc)
 for match_id, start, end in matches:
     span = doc[start:end]
     span.label_ = "DEFTERM"
-    print("defined term found:", span.text, span.label_)
+    #print("defined term found:", span.text, span.label_)
