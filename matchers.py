@@ -3,7 +3,7 @@ from spacy.tokens import Doc, Span, Token
 from spacy.matcher import Matcher, PhraseMatcher
 import re
 
-Doc.set_extension("defined_terms", default=[])
+Doc.set_extension("defined_terms", default=[], force=True)
 
 def label_dt_decl(doc):
     """
@@ -25,13 +25,13 @@ def label_dt_decl(doc):
     print("defined terms:", doc._.defined_terms)
 
 
-def label_defterms(nlp, doc):
+def label_defterms(vocab, doc):
     """
     Finds all instances of same lemmas as defined terms in doc and labels them
     as DEFTERMS.
     """
     # Matches all strings in defined terms attribute
-    def_term_matcher = PhraseMatcher(nlp.vocab)
+    def_term_matcher = PhraseMatcher(vocab)
     def_term_patterns = [nlp.make_doc(term.text) for term in doc._.defined_terms]
     def_term_matcher.add("DefinedTerms", def_term_patterns)
 
