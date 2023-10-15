@@ -3,7 +3,7 @@ preambles=[
     15,2020 (“Effective Date”), between 678M TEST LLC, a state of Delaware limited
     liability company (“Buyer”), and GOOGOL (USA) INC., a Delaware corporation
     (“Seller”).  Buyer and Seller are referred to herein individually as a
-    “Party”, and collectively as the “Parties”. This Agreement shall be for
+    “Party.” or Parties. This Agreement shall be for
     ¥1,234, or £1,234 of value.
     """,
 
