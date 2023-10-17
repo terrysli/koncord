@@ -4,7 +4,7 @@ import re
 
 from utils import get_lemmas
 
-Doc.set_extension("defined_terms", default=[], force=True)
+Doc.set_extension("defterms", default=[], force=True)
 
 def label_defterms(nlp, doc):
     label_dt_decl(doc)
@@ -14,11 +14,11 @@ def label_defterms(nlp, doc):
 
 def label_dt_decl(doc):
     """
-    Matches phrases in quotes, labels them as DT_DECL (defined term
-    declarations, and adds the terms (w/out quotes) into defined_terms extension
-    attribute of doc.
+    Finds and labels defined term declarationas a "DT_DECL", and adds the terms
+    (w/out quotes) into doc._.defterms.
     """
-    expression = r'[“"][^“”"]+\.?[”"]'
+    # Regex matches any title-cased phrase within double quotes.
+    expression = r'[“"][A-Z][a-z]+(?: [A-Z][a-z]+)*\.?[”"]'
     for match in re.finditer(expression, doc.text):
         start, end = match.span()
         span = doc.char_span(start, end, label="DT_DECL")
@@ -31,9 +31,9 @@ def label_dt_decl(doc):
             if span.text[-1] == '.':
                 span = doc.char_span(start+1, end-2)
             span.label_ = "DEFTERM"
-            doc._.defined_terms.append(span)
+            doc._.defterms.append(span)
 
-    print("defined terms:", doc._.defined_terms)
+    print("defined terms:", doc._.defterms)
 
 def label_defterm_instances(nlp, doc):
     """
@@ -42,7 +42,7 @@ def label_defterm_instances(nlp, doc):
     # Matches all strings in defined terms attribute
     def_term_matcher = PhraseMatcher(nlp.vocab)
     def_term_patterns = [nlp.make_doc(term.text)
-                         for term in doc._.defined_terms]
+                         for term in doc._.defterms]
     def_term_matcher.add("DefinedTerms", def_term_patterns)
 
     # Labels all spans matching defined terms as "DEFTERM"
@@ -58,12 +58,12 @@ def label_defterm_lemmas(nlp, doc):
     not exactly defined terms, and labels them as DEFTERMS.
     """
     # Matches all single tokens with shared lemmas as defined terms.
-    lower_defterms = [term.text.lower() for term in doc._.defined_terms]
+    lower_defterms = [term.text.lower() for term in doc._.defterms]
     defterm_lemmas = get_lemmas(lower_defterms)
     print("lemmas:", defterm_lemmas)
     for token in doc:
         if token.is_title and not (token.text in
-            [term.text for term in doc._.defined_terms]):
+            [term.text for term in doc._.defterms]):
             lemma = nlp(token.text)[0].lemma_
             if lemma in defterm_lemmas:
                 span = Span(doc, token.i, token.i+1, label="DEFTERM")
