@@ -1,8 +1,6 @@
 import spacy
-from spacy.language import Language
 
 from references.categories import STATES, BIZ_TYPES, INCOTERMS
-from data.preambles import preambles
 from utils import clean
 
 def call_rulers(text):

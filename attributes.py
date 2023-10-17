@@ -3,7 +3,7 @@ from spacy.language import Language
 from spacy.tokens import Doc, Span, Token
 from spacy.matcher import Matcher, PhraseMatcher
 
-from categories import STATES, BIZ_TYPES, INCOTERMS
+from references.categories import STATES, BIZ_TYPES, INCOTERMS
 from clauses import preamble1 as text
 
 # Load a spaCy model

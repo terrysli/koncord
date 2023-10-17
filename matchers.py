@@ -1,9 +1,15 @@
-import spacy
-from spacy.tokens import Doc, Span, Token
+from spacy.tokens import Doc
 from spacy.matcher import Matcher, PhraseMatcher
 import re
 
+from utils import get_lemmas
+
 Doc.set_extension("defined_terms", default=[], force=True)
+
+def label_defterms(nlp, doc):
+    label_dt_decl(doc)
+    label_defterm_instances(nlp, doc)
+    label_defterm_lemmas(nlp, doc)
 
 
 def label_dt_decl(doc):
@@ -29,11 +35,9 @@ def label_dt_decl(doc):
 
     print("defined terms:", doc._.defined_terms)
 
-
-def label_defterms(nlp, doc):
+def label_defterm_instances(nlp, doc):
     """
-    Finds all instances of same lemmas as defined terms in doc and labels them
-    as DEFTERMS.
+    Finds all instances of defined terms in doc and labels them as DEFTERMS.
     """
     # Matches all strings in defined terms attribute
     def_term_matcher = PhraseMatcher(nlp.vocab)
@@ -48,15 +52,15 @@ def label_defterms(nlp, doc):
         span.label_ = "DEFTERM"
         print("defined term found:", span.text, span.label_)
 
-def label_defterms_lemmas(nlp, doc):
+def label_defterm_lemmas(nlp, doc):
     """
     Finds all instances of words that share lemmas with defined terms but are
     not exactly defined terms, and labels them as DEFTERMS.
     """
     # Matches all single tokens with shared lemmas as defined terms.
     defterm_lemma_matcher = Matcher(nlp.vocab)
-    lemmas = [term[0].lemma_ for term in doc._.defined_terms
-                       if len(term) == 1]
+    lower_defterms = [term.text.lower() for term in doc._.defined_terms]
+    lemmas = get_lemmas(lower_defterms)
     print("lemmas:", lemmas)
     defterm_lemma_patterns = [[{"LEMMA": lemma}] for lemma in lemmas]
     defterm_lemma_matcher.add("DefinedTermsLemmas", defterm_lemma_patterns)
