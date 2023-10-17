@@ -52,9 +52,10 @@ def call_rulers(text):
     ]
     ruler.add_patterns(span_patterns)
 
-    # Insert text to analyze here
     text = clean(text)
-    doc = nlp(text)
+    with nlp.select_pipes(disable="ner"):
+        #print("pipe:", nlp.pipe_names)
+        doc = nlp(text)
 
     print("Entities:", [(ent.text, ent.label_) for ent in doc.ents])
     print("Spans:", [(span.text, span.label_) for span in doc.spans["ruler"]])
