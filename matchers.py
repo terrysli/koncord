@@ -1,4 +1,4 @@
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Span
 from spacy.matcher import Matcher, PhraseMatcher
 import re
 
@@ -58,15 +58,15 @@ def label_defterm_lemmas(nlp, doc):
     not exactly defined terms, and labels them as DEFTERMS.
     """
     # Matches all single tokens with shared lemmas as defined terms.
-    defterm_lemma_matcher = Matcher(nlp.vocab)
     lower_defterms = [term.text.lower() for term in doc._.defined_terms]
-    lemmas = get_lemmas(lower_defterms)
-    print("lemmas:", lemmas)
-    defterm_lemma_patterns = [[{"LEMMA": lemma}] for lemma in lemmas]
-    defterm_lemma_matcher.add("DefinedTermsLemmas", defterm_lemma_patterns)
+    defterm_lemmas = get_lemmas(lower_defterms)
+    print("lemmas:", defterm_lemmas)
+    for token in doc:
+        if token.is_title and not (token.text in
+            [term.text for term in doc._.defined_terms]):
+            lemma = nlp(token.text)[0].lemma_
+            if lemma in defterm_lemmas:
+                span = Span(doc, token.i, token.i+1, label="DEFTERM")
+                print("defined term found on lemma:", span.text, span.label_)
 
-    matches = defterm_lemma_matcher(doc)
-    for match_id, start, end in matches:
-        span = doc[start:end]
-        span.label_ = "DEFTERM"
-        print("defined term found:", span.text, span.label_)
+
