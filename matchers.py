@@ -19,9 +19,9 @@ def label_dt_decl(doc):
         # This is a Span object or None if match doesn't map to valid token
         # sequence
         if span is not None:
-            # Remove surrounding quotes
+            # Removes surrounding quotes
             span = doc.char_span(start+1, end-1)
-            # Remove period if inside quotes
+            # Removes period if inside quotes
             if span.text[-1] == '.':
                 span = doc.char_span(start+1, end-2)
             span.label_ = "DEFTERM"
@@ -43,6 +43,25 @@ def label_defterms(nlp, doc):
 
     # Labels all spans matching defined terms as "DEFTERM"
     matches = def_term_matcher(doc)
+    for match_id, start, end in matches:
+        span = doc[start:end]
+        span.label_ = "DEFTERM"
+        print("defined term found:", span.text, span.label_)
+
+def label_defterms_lemmas(nlp, doc):
+    """
+    Finds all instances of words that share lemmas with defined terms but are
+    not exactly defined terms, and labels them as DEFTERMS.
+    """
+    # Matches all single tokens with shared lemmas as defined terms.
+    defterm_lemma_matcher = Matcher(nlp.vocab)
+    lemmas = [term[0].lemma_ for term in doc._.defined_terms
+                       if len(term) == 1]
+    print("lemmas:", lemmas)
+    defterm_lemma_patterns = [[{"LEMMA": lemma}] for lemma in lemmas]
+    defterm_lemma_matcher.add("DefinedTermsLemmas", defterm_lemma_patterns)
+
+    matches = defterm_lemma_matcher(doc)
     for match_id, start, end in matches:
         span = doc[start:end]
         span.label_ = "DEFTERM"
