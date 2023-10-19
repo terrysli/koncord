@@ -1,3 +1,8 @@
+"""
+Entity and Span Rulers to label simple token patterns that require no pre or
+post processing or context to ID.
+"""
+
 import spacy
 
 from references.categories import STATES, BIZ_TYPES, INCOTERMS

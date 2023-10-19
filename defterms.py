@@ -1,3 +1,7 @@
+"""
+Matchers and functions to label defined terms and save them in doc.
+"""
+
 from spacy.tokens import Doc, Span
 from spacy.matcher import PhraseMatcher
 import re
