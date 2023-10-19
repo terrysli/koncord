@@ -1,0 +1,10 @@
+indemnities = [
+    """
+    Seller shall defend, indemnify and hold harmless Buyer from (a) any breach
+    by Seller of Seller’s representations in Section 12.1.8 or grant of license
+    in Section 15.2, and (b) any claim of any third party that any Modules or
+    subcomponents thereof furnished under this Agreement actually or allegedly
+    infringe any patent, copyright or other intellectual property rights of any
+    type in the United States.
+    """
+]
