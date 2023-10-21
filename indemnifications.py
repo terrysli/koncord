@@ -9,12 +9,12 @@ def label_indem(nlp, doc):
     patterns = [
         # "shall/will indemnify/defend"
         [
-            {"LOWER": {"IN": ["shall", "will"]}},
+            {"LOWER": {"IN": ["shall", "will", "must"]}},
             {"LOWER": {"IN": ["indemnify", "defend"]}}
         ],
         # "shall/will hold harmless"
         [
-            {"LOWER": {"IN": ["shall", "will"]}},
+            {"LOWER": {"IN": ["shall", "will", "must"]}},
             {"LOWER": "hold"},
             {"OP": "*"},
             {"LOWER": "harmless"}
@@ -30,5 +30,10 @@ def label_indem(nlp, doc):
     matcher = Matcher(nlp.vocab)
     matcher.add("IndemnificationMatcher", patterns)
     matches = matcher(doc)
+    indemnifications = []
     for match_id, start, end in matches:
-        print("indemnification found:", doc[start:end].sent.text)
+        sent = doc[start:end].sent
+        indemnifications.append(sent)
+        print("indemnification found:", sent.text)
+
+    return indemnifications

@@ -22,7 +22,7 @@ def label_dt_decl(doc):
     (w/out quotes) into doc._.defterms.
     """
     # Regex matches any title-cased phrase within double quotes.
-    expression = r'[“"][A-Z][A-Za-z]*(?: [A-Z][A-Za-z]*)*\.?[”"]'
+    expression = r'[“"][A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*\.?[”"]'
     for match in re.finditer(expression, doc.text):
         start, end = match.span()
         span = doc.char_span(start, end, label="DT_DECL")
