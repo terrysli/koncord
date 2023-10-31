@@ -77,4 +77,10 @@ def label_defterm_lemmas(nlp, doc):
                 span = Span(doc, token.i, token.i+1, label="DEFTERM")
                 print("defined term found on lemma:", span.text, span.label_)
 
+def label_undefined_terms(nlp, doc):
+    """
+    Finds all instances of capitalized words that are not defined, meaning not
+    having a corresponding defined term declaration.
+    """
+
 
