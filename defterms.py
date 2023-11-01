@@ -37,7 +37,8 @@ def label_dt_decl(doc):
             span.label_ = "DEFTERM"
             doc._.defterms.append(span)
 
-    print("defined terms:", doc._.defterms)
+    # print("defined terms:", doc._.defterms)
+
 
 def label_defterm_instances(nlp, doc):
     """
@@ -65,7 +66,8 @@ def label_defterm_lemmas(nlp, doc):
     lower_defterms = [term.text.lower() for term in doc._.defterms
                       if len(term) == 1]
     defterm_lemmas = get_lemmas(lower_defterms)
-    print("lemmas:", defterm_lemmas)
+
+    # print("lemmas:", defterm_lemmas)
 
     # Finds all single tokens with lemma contained in defterm_lemmas and labels
     # them as "DEFTERM".
@@ -75,12 +77,6 @@ def label_defterm_lemmas(nlp, doc):
             lemma = nlp(token.text)[0].lemma_
             if lemma in defterm_lemmas:
                 span = Span(doc, token.i, token.i+1, label="DEFTERM")
-                print("defined term found on lemma:", span.text, span.label_)
-
-def label_undefined_terms(nlp, doc):
-    """
-    Finds all instances of capitalized words that are not defined, meaning not
-    having a corresponding defined term declaration.
-    """
+                # print("defined term found on lemma:", span.text, span.label_)
 
 

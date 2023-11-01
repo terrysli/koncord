@@ -62,7 +62,4 @@ def call_rulers(text):
         #print("pipe:", nlp.pipe_names)
         doc = nlp(text)
 
-    print("Entities:", [(ent.text, ent.label_) for ent in doc.ents])
-    print("Spans:", [(span.text, span.label_) for span in doc.spans["ruler"]])
-
     return nlp, doc

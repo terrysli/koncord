@@ -25,8 +25,8 @@ def label_undefined(nlp, doc):
     defterms_strings = [term.text for term in doc._.defterms]
     for match_id, start, end in matches:
         span = doc[start:end]
+        # Returns true if no token in span is part of an entity
         no_tokens_in_entity = True
-        # Returns true if any token in span is part of an entity
         for token in span:
             if token.ent_type_:
                 no_tokens_in_entity = False
@@ -34,4 +34,4 @@ def label_undefined(nlp, doc):
             span.label_ = "UNDEFINED"
             doc._.undefined.append(span)
 
-    print("undefined terms:", doc._.undefined)
+    # print("undefined terms:", doc._.undefined)
